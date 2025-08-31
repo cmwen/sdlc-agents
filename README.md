@@ -1,89 +1,90 @@
-# Agentic SDLC with Human-in-the-Loop
+# Agentic SDLC with AI-in-the-Loop
 
-This repository explores a **lightweight Agentic SDLC methodology** designed for solo developers or small teams who want to leverage AI coding assistants (e.g., GitHub Copilot, Claude Code) as role-based agents.  
+This repository defines a lightweight, role-based Agentic SDLC where multiple specialized agents collaborate to deliver software with strong traceability and human oversight. Each agent is a prompt file in `.github/prompts/` and is designed to be used with AI coding tools (for example, GitHub Copilot, Claude Code, Cursor) as a working companion—not a single monolithic assistant.
 
-Instead of relying on one monolithic AI, this system splits responsibilities into **specialized agents** that reflect classic software development roles (Vision, Design, Implementation, QA, Release). Each agent is defined via `.prompt.md` files and can provide **insights, critiques, and clarifications** instead of passively following user instructions.
+The agents in this repo:
+- Vision — `.github/prompts/vision.prompt.md`
+- Product — `.github/prompts/product.prompt.md`
+- Design — `.github/prompts/design.prompt.md`
+- Execution — `.github/prompts/execution.prompt.md`
+- QA — `.github/prompts/qa.prompt.md`
+- Governance — `.github/prompts/governance.prompt.md`
 
----
-
-## ✨ Core Principles
-
-1. **Human-in-the-Loop:**  
-   AI is not left unchecked. At key stages (Vision, Design, Code Review, Release), humans provide oversight, context, and strategy.
-
-2. **Role-based Agents:**  
-   - Vision/Strategy Agent  
-   - Design/Architecture Agent  
-   - Implementation Agent  
-   - QA/Test Agent  
-   - Release/Feedback Agent  
-
-3. **Traceability:**  
-   Each agent maintains a record of decisions and rationale (in Markdown), ensuring that requirements, designs, and tests are **auditable and revisitable** when requirements change.
-
-4. **Living Documents:**  
-   All outputs (requirements.md, design.md, test-plan.md, release-notes.md) are **version-controlled in the repo** to support iteration and adjustment.
+All prompts encourage agents to use tools to gather external context when helpful.
 
 ---
 
-## 📂 Repo Structure
+## Core principles
 
-/agents
-vision.prompt.md
-design.prompt.md
-implementation.prompt.md
-qa.prompt.md
-release.prompt.md
-
-/docs
-requirements.md
-design.md
-test-plan.md
-release-notes.md
+1. Human-in-the-loop: People review and approve key steps. Agents challenge assumptions and surface risks.
+2. Role specialization: Each agent focuses on its domain (Vision, Product, Design, Execution, QA, Governance) and hands off clearly to the next.
+3. Traceability-by-default: Every output links backward and forward across the lifecycle using Markdown docs and labels.
+4. Tools for context: Agents are encouraged to use tools (for example, MCP tools or IDE-integrated actions) to research and validate decisions.
 
 ---
 
-## 🚀 Workflow
+## How the agents collaborate
 
-1. **Start with Vision Agent**  
-   - User shares a feature idea or problem.  
-   - Agent challenges assumptions, clarifies unknowns, and writes `/docs/requirements.md`.  
+Simple ASCII view of the forward flow and feedback loops:
 
-2. **Move to Design Agent**  
-   - Translates requirements into architecture and decisions.  
-   - Produces `/docs/design.md`.  
+```
+ [Vision] --[Vision → Product]--> [Product] --[Product → Design]--> [Design]
+       |                                   |                             |
+       v                                   v                             v
+   /docs/vision.md                  /docs/product_backlog.md       /docs/design.md
 
-3. **Implementation Agent**  
-   - Generates code.  
-   - Embeds traceability links back to requirements & design.  
+ [Design] --[Design → Execution]--> [Execution] --[Execution → QA]--> [QA]
+       |                                   |                             |
+       v                                   v                             v
+ (design decisions)                /docs/execution_log.md         /docs/qa_plan.md
 
-4. **QA Agent**  
-   - Creates `/docs/test-plan.md`.  
-   - Ensures test cases map to requirements.  
+ Feedback loops:
+    [QA] --[QA → Execution: Bug]--> [Execution]
+    [QA] --[QA → Design: Flaw]----> [Design]
 
-5. **Release Agent**  
-   - Summarizes changes, writes `/docs/release-notes.md`.  
-   - Captures lessons learned for next iteration.  
+ Governance (process guardian & traceability):
+    [Governance] watches all stages, flags missing links, and maintains
+    /docs/governance_traceability.md; provides in-flight summaries and readiness checks.
+```
 
----
-
-## 🎯 Benefits
-
-- **Clarity through Iteration:** Multiple rounds with Vision/Design Agents reduce misalignment.  
-- **Traceability:** Clear link from requirements → design → code → test → release.  
-- **Human Control:** Developers only need to focus on reviewing key artifacts, not micromanaging every step.  
-- **Scalable:** Start simple (one developer + agents), expand later with team-wide usage.  
+Notes:
+- Labels in brackets are used to tag handoffs and create an audit trail in Markdown.
+- Governance coordinates handoffs and guards traceability; it is not a methodology label.
 
 ---
 
-## 🔮 Future Direction
+## Traceability map (Markdown docs)
 
-- MCP-based persistence (instead of only repo Markdown)  
-- Agent-to-agent communication for brainstorming  
-- Automated change impact analysis when requirements shift  
+- `/docs/vision.md` — Problem statement, user scenarios, success criteria, risks. [Vision → Product]
+- `/docs/product_backlog.md` — Epics, features, acceptance criteria; linked to Vision and QA. [Product → Design]
+- `/docs/design.md` — Architecture, sequence flows, data models, trade-offs; linked to backlog items and Execution notes. [Design → Execution]
+- `/docs/execution_log.md` — Implemented features, linked design decisions and backlog items, suggested tests. [Execution → QA]
+- `/docs/qa_plan.md` — Test scenarios mapped to acceptance criteria and design decisions; regression risks tied to execution notes. [QA → Governance]
+- `/docs/governance_traceability.md` — Cross-references, gaps, and audit notes across all artifacts.
 
 ---
 
-## 📖 License
+## Quickstart workflow
+
+1. Start with Vision: clarify scope and write `/docs/vision.md`.
+2. Product creates `/docs/product_backlog.md` with acceptance criteria.
+3. Design proposes options and documents `/docs/design.md` with trade-offs and risks.
+4. Execution implements changes, updates `/docs/execution_log.md`, and tags handoff to QA.
+5. QA drafts `/docs/qa_plan.md`, files bugs using labels (for example, `[QA → Execution: Bug]`).
+6. Governance enforces links, highlights gaps, and prepares readiness checks.
+
+---
+
+## Best practices
+
+- Keep prompts brief but explicit; link to the relevant `/docs/*.md` artifacts in your request.
+- Use the labels defined in the prompts to tag handoffs and feedback loops.
+- Prefer adding context (files, diffs) to chats over long prose—let the agent read the source.
+- Ask agents to compare at least two approaches when there’s ambiguity and to record trade-offs in `/docs/design.md`.
+- Encourage the agent to use tools for external validation (benchmarks, API docs, security checks) and to capture references in the docs.
+
+---
+
+## License
 
 MIT
