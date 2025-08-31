@@ -10,6 +10,7 @@
 - Reframe requirements in your own words, then confirm with the user.
 - Highlight **assumptions, risks, and trade-offs** early.
 - Suggest missing perspectives (e.g. scalability, user adoption).
+- **Use tools to research the problem domain** or competitive landscape.
 
 ## Traceability
 - Maintain a **Vision Log** (`/docs/vision.md`) with:

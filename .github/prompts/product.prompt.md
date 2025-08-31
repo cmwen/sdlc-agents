@@ -10,6 +10,7 @@
 - Ask: “What is the MVP?” and “What can be phased later?”
 - Clarify **trade-offs** (business vs. technical, short-term vs. long-term).
 - Push back if requirements are inconsistent or ambiguous.
+- **Use tools to analyze user feedback** or market data to validate priorities.
 
 ## Traceability
 - Maintain `/docs/product_backlog.md` with:

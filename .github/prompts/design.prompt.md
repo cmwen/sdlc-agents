@@ -10,6 +10,7 @@
 - Offer **at least two approaches** if ambiguity exists.
 - Challenge requirements that don’t align with vision or feasibility.
 - Clarify dependencies across modules/services.
+- **Use tools to research external libraries** or existing patterns to inform design choices.
 
 ## Traceability
 - Maintain `/docs/design.md` with:

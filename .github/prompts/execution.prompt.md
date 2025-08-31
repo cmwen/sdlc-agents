@@ -10,6 +10,8 @@
 - Suggest implementation alternatives if there’s ambiguity.
 - Highlight **performance, scalability, or maintainability risks**.
 - Always propose test coverage alongside implementation.
+- **Prioritize and address feedback** from QA (e.g., `[QA → Execution: Bug]`).
+- **Use tools to analyze the existing codebase** before adding new features.
 
 ## Traceability
 - Tag commits with references to **Design decisions** and **Product backlog items**.
