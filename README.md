@@ -2,6 +2,34 @@
 
 This repository defines a lightweight, role-based Agentic SDLC where multiple specialized agents collaborate to deliver software with strong traceability and human oversight. Each agent is a prompt file in `.github/prompts/` and is designed to be used with AI coding tools (for example, GitHub Copilot, Claude Code, Cursor) as a working companion—not a single monolithic assistant.
 
+## 🚀 Quick Start
+
+Install the CLI tool globally:
+
+```bash
+npm install -g @cmwen/sdlc-agents
+```
+
+Or use with npx (no installation required):
+
+```bash
+npx @cmwen/sdlc-agents init
+```
+
+### Commands
+
+- `sdlc-agents init` - Initialize a new project with prompts and documentation structure
+- `sdlc-agents install` - Install only the prompt files
+- `sdlc-agents list` - List all available agents
+- `sdlc-agents --help` - Show help information
+
+### Options
+
+- `-p, --path <path>` - Installation path (default: `.github/prompts`)
+- `-f, --force` - Overwrite existing files
+
+## The Agents
+
 The agents in this repo:
 - Research — `.github/prompts/research.prompt.md`
 - Vision — `.github/prompts/vision.prompt.md`

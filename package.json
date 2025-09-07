@@ -1,0 +1,51 @@
+{
+  "name": "@cmwen/sdlc-agents",
+  "version": "1.0.0",
+  "description": "A lightweight, role-based Agentic SDLC with AI-in-the-Loop prompts and CLI installer",
+  "main": "dist/index.js",
+  "bin": {
+    "sdlc-agents": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "dist/",
+    "prompts/",
+    "README.md",
+    "USAGE.md"
+  ],
+  "keywords": [
+    "sdlc",
+    "ai",
+    "agents",
+    "prompts",
+    "cli",
+    "copilot",
+    "claude",
+    "cursor"
+  ],
+  "author": "cmwen",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cmwen/sdlc-agents.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cmwen/sdlc-agents/issues"
+  },
+  "homepage": "https://github.com/cmwen/sdlc-agents#readme",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "commander": "^11.0.0",
+    "chalk": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
