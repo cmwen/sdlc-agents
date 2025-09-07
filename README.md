@@ -3,6 +3,7 @@
 This repository defines a lightweight, role-based Agentic SDLC where multiple specialized agents collaborate to deliver software with strong traceability and human oversight. Each agent is a prompt file in `.github/prompts/` and is designed to be used with AI coding tools (for example, GitHub Copilot, Claude Code, Cursor) as a working companion—not a single monolithic assistant.
 
 The agents in this repo:
+- Research — `.github/prompts/research.prompt.md`
 - Vision — `.github/prompts/vision.prompt.md`
 - Product — `.github/prompts/product.prompt.md`
 - Design — `.github/prompts/design.prompt.md`
@@ -28,6 +29,16 @@ All prompts encourage agents to use tools to gather external context when helpfu
 Simple ASCII view of the forward flow and feedback loops:
 
 ```
+                              [Research] (Knowledge & Insights)
+                                   |
+                                   v
+                        /docs/research/index.md
+                        /docs/research/topics/*.md
+                        /docs/research/conversations/*.md
+                                   |
+     Research feeds into all stages and receives requests from any stage
+                                   |
+                                   v
  [Vision] --[Vision → Product]--> [Product] --[Product → Design]--> [Design]
        |                                   |                             |
        v                                   v                             v
@@ -41,6 +52,7 @@ Simple ASCII view of the forward flow and feedback loops:
  Feedback loops:
     [QA] --[QA → Execution: Bug]--> [Execution]
     [QA] --[QA → Design: Flaw]----> [Design]
+    [Any Stage] --[Stage → Research]--> [Research] --[Research → Stage]--> [Any Stage]
 
  Governance (process guardian & traceability):
     [Governance] watches all stages, flags missing links, and maintains
@@ -55,6 +67,9 @@ Notes:
 
 ## Traceability map (Markdown docs)
 
+- `/docs/research/index.md` — Master index of research activities, topics, and knowledge. Cross-references to all SDLC stages. [Research ↔ All Stages]
+- `/docs/research/topics/*.md` — Deep-dive research on specific topics with multi-perspective analysis. [Research → Relevant Stages]
+- `/docs/research/conversations/*.md` — Brainstorming sessions, learning activities, and research discussions. [Research ↔ All Stages]
 - `/docs/vision.md` — Problem statement, user scenarios, success criteria, risks. [Vision → Product]
 - `/docs/product_backlog.md` — Epics, features, acceptance criteria; linked to Vision and QA. [Product → Design]
 - `/docs/design.md` — Architecture, sequence flows, data models, trade-offs; linked to backlog items and Execution notes. [Design → Execution]
@@ -66,12 +81,15 @@ Notes:
 
 ## Quickstart workflow
 
-1. Start with Vision: clarify scope and write `/docs/vision.md`.
-2. Product creates `/docs/product_backlog.md` with acceptance criteria.
-3. Design proposes options and documents `/docs/design.md` with trade-offs and risks.
-4. Execution implements changes, updates `/docs/execution_log.md`, and tags handoff to QA.
-5. QA drafts `/docs/qa_plan.md`, files bugs using labels (for example, `[QA → Execution: Bug]`).
-6. Governance enforces links, highlights gaps, and prepares readiness checks.
+1. **Research** (optional but recommended): For complex or unfamiliar domains, start with research to gather context, explore approaches, and identify best practices.
+2. Start with Vision: clarify scope and write `/docs/vision.md`.
+3. Product creates `/docs/product_backlog.md` with acceptance criteria.
+4. Design proposes options and documents `/docs/design.md` with trade-offs and risks.
+5. Execution implements changes, updates `/docs/execution_log.md`, and tags handoff to QA.
+6. QA drafts `/docs/qa_plan.md`, files bugs using labels (for example, `[QA → Execution: Bug]`).
+7. Governance enforces links, highlights gaps, and prepares readiness checks.
+
+**Research Integration**: Any agent can request research support using `[Stage → Research]` labels, and Research provides insights back using `[Research → Stage]` labels.
 
 ---
 
