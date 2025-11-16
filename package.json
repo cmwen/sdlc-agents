@@ -1,7 +1,7 @@
 {
   "name": "@cmwen/sdlc-agents",
-  "version": "1.0.0",
-  "description": "A lightweight, role-based Agentic SDLC with AI-in-the-Loop prompts and CLI installer",
+  "version": "2.0.0",
+  "description": "A lightweight, role-based Agentic SDLC with VS Code custom agents and seamless handoffs",
   "main": "dist/index.js",
   "bin": {
     "sdlc-agents": "./dist/cli.js"
@@ -13,7 +13,7 @@
   },
   "files": [
     "dist/",
-    "prompts/",
+    "agents/",
     "README.md",
     "USAGE.md"
   ],
@@ -21,11 +21,13 @@
     "sdlc",
     "ai",
     "agents",
-    "prompts",
+    "vscode",
+    "custom-agents",
     "cli",
     "copilot",
-    "claude",
-    "cursor"
+    "github-copilot",
+    "handoffs",
+    "workflow"
   ],
   "author": "cmwen",
   "license": "MIT",

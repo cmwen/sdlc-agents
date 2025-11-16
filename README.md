@@ -1,6 +1,6 @@
-# Agentic SDLC with AI-in-the-Loop
+# Agentic SDLC with VS Code Custom Agents
 
-This repository defines a lightweight, role-based Agentic SDLC where multiple specialized agents collaborate to deliver software with strong traceability and human oversight. Each agent is a prompt file in `.github/prompts/` and is designed to be used with AI coding tools (for example, GitHub Copilot, Claude Code, Cursor) as a working companion—not a single monolithic assistant.
+This repository defines a lightweight, role-based Agentic SDLC where multiple specialized custom agents collaborate to deliver software with strong traceability and human oversight. Each agent is defined as a VS Code custom agent file (`.agent.md`) in `.github/agents/` and includes handoffs for seamless workflow transitions. Designed to work with GitHub Copilot in VS Code as your AI-powered development companion.
 
 ## 🚀 Quick Start
 
@@ -18,37 +18,42 @@ npx @cmwen/sdlc-agents init
 
 ### Commands
 
-- `sdlc-agents init` - Initialize a new project with prompts and documentation structure
-- `sdlc-agents install` - Install only the prompt files
-- `sdlc-agents list` - List all available agents
+- `sdlc-agents init` - Initialize a new project with custom agents and documentation structure
+- `sdlc-agents install` - Install only the custom agent files
+- `sdlc-agents list` - List all available agents with handoffs
 - `sdlc-agents --help` - Show help information
 
 ### Options
 
-- `-p, --path <path>` - Installation path (default: `.github/prompts`)
+- `-p, --path <path>` - Installation path (default: `.github/agents`)
 - `-f, --force` - Overwrite existing files
 
-## The Agents
+## The Custom Agents
 
-The agents in this repo:
-- Research — `.github/prompts/research.prompt.md`
-- Vision — `.github/prompts/vision.prompt.md`
-- Product — `.github/prompts/product.prompt.md`
-- Design — `.github/prompts/design.prompt.md`
-- Execution — `.github/prompts/execution.prompt.md`
-- QA — `.github/prompts/qa.prompt.md`
-- Governance — `.github/prompts/governance.prompt.md`
+The custom agents in this repo:
+- **Research** — `.github/agents/research.agent.md` — Conduct research, facilitate brainstorming, organize knowledge
+- **Vision** — `.github/agents/vision.agent.md` — Define problem space, establish vision and goals
+- **Product** — `.github/agents/product.agent.md` — Translate vision into product backlog with features
+- **Design** — `.github/agents/design.agent.md` — Create technical architecture and design solutions
+- **Execution** — `.github/agents/execution.agent.md` — Implement features and deliver working software
+- **QA** — `.github/agents/qa.agent.md` — Validate through comprehensive testing
+- **Governance** — `.github/agents/governance.agent.md` — Ensure traceability and process compliance
 
-All prompts encourage agents to use tools to gather external context when helpful.
+Each agent includes:
+- **Specialized tools** for their domain (fetch, search, codebase analysis, etc.)
+- **Handoffs** for seamless transitions to related agents
+- **Clear responsibilities** and interaction principles
+- **Traceability labels** for documentation cross-referencing
 
 ---
 
-## Core principles
+## Core Principles
 
-1. Human-in-the-loop: People review and approve key steps. Agents challenge assumptions and surface risks.
-2. Role specialization: Each agent focuses on its domain (Vision, Product, Design, Execution, QA, Governance) and hands off clearly to the next.
-3. Traceability-by-default: Every output links backward and forward across the lifecycle using Markdown docs and labels.
-4. Tools for context: Agents are encouraged to use tools (for example, MCP tools or IDE-integrated actions) to research and validate decisions.
+1. **Human-in-the-loop**: People review and approve key steps. Agents challenge assumptions and surface risks.
+2. **Role specialization**: Each custom agent focuses on its domain with specialized tools and instructions.
+3. **Seamless handoffs**: Use agent handoffs to transition between stages with a single click.
+4. **Traceability-by-default**: Every output links backward and forward across the lifecycle using Markdown docs and labels.
+5. **Tools for context**: Agents use VS Code tools (fetch, search, codebase, etc.) to research and validate decisions.
 
 ---
 
@@ -107,27 +112,50 @@ Notes:
 
 ---
 
-## Quickstart workflow
+## Quickstart Workflow
 
-1. **Research** (optional but recommended): For complex or unfamiliar domains, start with research to gather context, explore approaches, and identify best practices.
-2. Start with Vision: clarify scope and write `/docs/vision.md`.
-3. Product creates `/docs/product_backlog.md` with acceptance criteria.
-4. Design proposes options and documents `/docs/design.md` with trade-offs and risks.
-5. Execution implements changes, updates `/docs/execution_log.md`, and tags handoff to QA.
-6. QA drafts `/docs/qa_plan.md`, files bugs using labels (for example, `[QA → Execution: Bug]`).
-7. Governance enforces links, highlights gaps, and prepares readiness checks.
+### Using Handoffs for Seamless Transitions
 
-**Research Integration**: Any agent can request research support using `[Stage → Research]` labels, and Research provides insights back using `[Research → Stage]` labels.
+1. **Research** (optional but recommended): Use the Research agent for complex or unfamiliar domains to gather context and explore approaches. Click handoff to Vision or Product when ready.
+
+2. **Vision**: Switch to Vision agent, clarify scope and write `/docs/vision.md`. Use the "Create Product Backlog" handoff to transition.
+
+3. **Product**: Creates `/docs/product_backlog.md` with acceptance criteria. Use the "Design Features" handoff to move forward.
+
+4. **Design**: Proposes options and documents `/docs/design.md` with trade-offs. Use the "Start Implementation" handoff.
+
+5. **Execution**: Implements changes, updates `/docs/execution_log.md`. Use the "Test Implementation" handoff to QA.
+
+6. **QA**: Drafts `/docs/qa_plan.md`, files bugs using labels. Use the "Fix Issues" handoff to return to Execution, or "Sign Off" handoff to Governance.
+
+7. **Governance**: Enforces links, highlights gaps, and prepares readiness checks.
+
+**Pro Tip**: Each agent displays available handoffs as buttons after completing a response. Click them to transition with context automatically carried forward!
 
 ---
 
-## Best practices
+## Using Custom Agents in VS Code
 
-- Keep prompts brief but explicit; link to the relevant `/docs/*.md` artifacts in your request.
-- Use the labels defined in the prompts to tag handoffs and feedback loops.
-- Prefer adding context (files, diffs) to chats over long prose—let the agent read the source.
-- Ask agents to compare at least two approaches when there’s ambiguity and to record trade-offs in `/docs/design.md`.
-- Encourage the agent to use tools for external validation (benchmarks, API docs, security checks) and to capture references in the docs.
+### Switching Agents
+1. Open GitHub Copilot Chat in VS Code
+2. Click the agent dropdown (default is `@workspace`)
+3. Select your custom agent (Research, Vision, Product, Design, Execution, QA, or Governance)
+4. The agent's specialized tools and instructions are now active
+
+### Using Handoffs
+After an agent completes its response, handoff buttons appear at the bottom:
+- Click a handoff button to switch to the next agent with pre-filled context
+- The workflow guides you through the SDLC stages seamlessly
+- Example: Vision → Product → Design → Execution → QA → Governance
+
+## Best Practices
+
+- **Use handoffs** to transition between stages - they carry context forward automatically
+- **Keep requests focused** on the agent's domain for best results
+- **Use the labels** defined in the agents to tag handoffs and feedback loops
+- **Prefer adding context** (files, diffs) to chats over long prose—let the agent read the source
+- **Ask agents to compare approaches** when there's ambiguity and to record trade-offs in `/docs/design.md`
+- **Leverage tools**: Agents use #tool:fetch, #tool:search, #tool:githubRepo for validation and research
 
 ---
 

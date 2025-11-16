@@ -6,18 +6,18 @@ interface InstallOptions {
   force: boolean;
 }
 
-export async function installPrompts(targetPath: string = '.github/prompts', force: boolean = false): Promise<void> {
-  // Try to find prompts directory - could be in different locations depending on package structure
-  const possiblePromptsDirs = [
-    path.resolve(__dirname, '../prompts'),
-    path.resolve(__dirname, '../../prompts'),
-    path.resolve(__dirname, '../.github/prompts')
+export async function installAgents(targetPath: string = '.github/agents', force: boolean = false): Promise<void> {
+  // Try to find agents directory - could be in different locations depending on package structure
+  const possibleAgentsDirs = [
+    path.resolve(__dirname, '../agents'),
+    path.resolve(__dirname, '../../agents'),
+    path.resolve(__dirname, '../.github/agents')
   ];
   
-  let promptsDir: string | null = null;
-  for (const dir of possiblePromptsDirs) {
+  let agentsDir: string | null = null;
+  for (const dir of possibleAgentsDirs) {
     if (fs.existsSync(dir)) {
-      promptsDir = dir;
+      agentsDir = dir;
       break;
     }
   }
@@ -29,18 +29,18 @@ export async function installPrompts(targetPath: string = '.github/prompts', for
     fs.mkdirSync(targetDir, { recursive: true });
   }
 
-  // Copy prompt files
-  const promptFiles = [
-    'research.prompt.md',
-    'vision.prompt.md',
-    'product.prompt.md',
-    'design.prompt.md',
-    'execution.prompt.md',
-    'qa.prompt.md',
-    'governance.prompt.md'
+  // Copy agent files
+  const agentFiles = [
+    'research.agent.md',
+    'vision.agent.md',
+    'product.agent.md',
+    'design.agent.md',
+    'execution.agent.md',
+    'qa.agent.md',
+    'governance.agent.md'
   ];
 
-  for (const file of promptFiles) {
+  for (const file of agentFiles) {
     const targetFilePath = path.join(targetDir, file);
 
     if (fs.existsSync(targetFilePath) && !force) {
@@ -48,16 +48,16 @@ export async function installPrompts(targetPath: string = '.github/prompts', for
       continue;
     }
 
-    if (promptsDir && fs.existsSync(path.join(promptsDir, file))) {
-      const sourcePath = path.join(promptsDir, file);
+    if (agentsDir && fs.existsSync(path.join(agentsDir, file))) {
+      const sourcePath = path.join(agentsDir, file);
       fs.copyFileSync(sourcePath, targetFilePath);
-      console.log(`📁 Installed ${file}`);
+      console.log(`🤖 Installed ${file}`);
     } else {
       // Fallback to embedded content if source doesn't exist
-      const content = getPromptContent(file);
+      const content = getAgentContent(file);
       if (content) {
         fs.writeFileSync(targetFilePath, content);
-        console.log(`📁 Created ${file}`);
+        console.log(`🤖 Created ${file}`);
       }
     }
   }
@@ -117,10 +117,29 @@ export async function createDocumentationStructure(): Promise<void> {
   });
 }
 
-function getPromptContent(filename: string): string | null {
-  // Embedded prompt content as fallback
-  const prompts: Record<string, string> = {
-    'research.prompt.md': `# Research Agent
+function getAgentContent(filename: string): string | null {
+  // Embedded agent content as fallback
+  const agents: Record<string, string> = {
+    'research.agent.md': `---
+description: Conduct deep research, facilitate brainstorming, and organize knowledge
+name: Research
+tools: ['fetch', 'githubRepo', 'search', 'usages', 'codebase']
+handoffs:
+  - label: Define Vision
+    agent: vision
+    prompt: Use these research insights to define the project vision and problem statement.
+    send: false
+  - label: Create Product Backlog
+    agent: product
+    prompt: Use these research insights to inform the product backlog and feature prioritization.
+    send: false
+  - label: Inform Design
+    agent: design
+    prompt: Use these technical research findings to inform the system design.
+    send: false
+---
+
+# Research Agent
 
 You are the **Research Agent** in an Agentic SDLC system. Your primary role is to conduct deep research, facilitate brainstorming, and organize knowledge to support informed decision-making across the development lifecycle.
 
@@ -155,7 +174,22 @@ Use these labels to maintain traceability:
 
 Remember: Your role is to empower informed decision-making across the SDLC by providing thorough, well-organized research and facilitating deep understanding of complex topics.
 `,
-    'vision.prompt.md': `# Vision Agent
+    'vision.agent.md': `---
+description: Define problem space, establish vision, and set project goals
+name: Vision
+tools: ['fetch', 'search', 'codebase']
+handoffs:
+  - label: Research Problem Domain
+    agent: research
+    prompt: Research the problem domain, competitive landscape, and user needs to inform our vision.
+    send: false
+  - label: Create Product Backlog
+    agent: product
+    prompt: Translate this vision into a product backlog with epics and features.
+    send: false
+---
+
+# Vision Agent
 
 You are the **Vision Agent** in an Agentic SDLC system. Your role is to define the problem space, establish project vision, and create the foundational understanding that guides all subsequent development activities.
 
@@ -186,7 +220,22 @@ Create and maintain \`/docs/vision.md\` with these sections:
 
 Remember: Your role is to establish the "why" and "what" that guides the entire development lifecycle.
 `,
-    'product.prompt.md': `# Product Agent
+    'product.agent.md': `---
+description: Translate vision into product backlog with features and acceptance criteria
+name: Product
+tools: ['fetch', 'search', 'codebase']
+handoffs:
+  - label: Research Market/Users
+    agent: research
+    prompt: Research market trends, user needs, and competitive features to inform product decisions.
+    send: false
+  - label: Design Features
+    agent: design
+    prompt: Design the technical architecture and implementation approach for these features.
+    send: false
+---
+
+# Product Agent
 
 You are the **Product Agent** in an Agentic SDLC system. Your role is to translate vision into actionable product features, manage the backlog, and define acceptance criteria.
 
@@ -216,7 +265,22 @@ Create and maintain \`/docs/product_backlog.md\` with:
 
 Remember: Your role is to define the "what" in detail, ensuring clear requirements for design and development.
 `,
-    'design.prompt.md': `# Design Agent
+    'design.agent.md': `---
+description: Create technical architecture, design solutions, and document trade-offs
+name: Design
+tools: ['fetch', 'githubRepo', 'search', 'usages', 'codebase']
+handoffs:
+  - label: Research Technical Approach
+    agent: research
+    prompt: Research technical approaches, patterns, and best practices for this design challenge.
+    send: false
+  - label: Start Implementation
+    agent: execution
+    prompt: Implement the design outlined above, following the specified architecture and patterns.
+    send: false
+---
+
+# Design Agent
 
 You are the **Design Agent** in an Agentic SDLC system. Your role is to architect solutions, define technical approaches, and create detailed design specifications.
 
@@ -247,7 +311,22 @@ Create and maintain \`/docs/design.md\` with:
 
 Remember: Your role is to define the "how" - turning requirements into implementable technical solutions.
 `,
-    'execution.prompt.md': `# Execution Agent
+    'execution.agent.md': `---
+description: Implement features, write code, and deliver working software
+name: Execution
+tools: ['fetch', 'githubRepo', 'search', 'usages', 'codebase']
+handoffs:
+  - label: Research Implementation
+    agent: research
+    prompt: Research implementation patterns, best practices, and libraries for this feature.
+    send: false
+  - label: Test Implementation
+    agent: qa
+    prompt: Test the implementation, verify acceptance criteria, and identify any issues.
+    send: false
+---
+
+# Execution Agent
 
 You are the **Execution Agent** in an Agentic SDLC system. Your role is to implement features, write code, and deliver working software according to design specifications.
 
@@ -277,7 +356,26 @@ Create and maintain \`/docs/execution_log.md\` with:
 
 Remember: Your role is to deliver working software that meets requirements and maintains quality standards.
 `,
-    'qa.prompt.md': `# QA Agent
+    'qa.agent.md': `---
+description: Validate requirements, design, and implementation through comprehensive testing
+name: QA
+tools: ['fetch', 'search', 'usages', 'codebase']
+handoffs:
+  - label: Research Testing Approach
+    agent: research
+    prompt: Research testing methodologies, tools, and best practices for this type of application.
+    send: false
+  - label: Fix Issues
+    agent: execution
+    prompt: Fix the bugs and issues identified in the QA report above.
+    send: false
+  - label: Sign Off
+    agent: governance
+    prompt: Review the QA results and sign off for release readiness.
+    send: false
+---
+
+# QA Agent
 
 You are the **QA Agent** in an Agentic SDLC system. Your role is to ensure quality through testing, validation, and continuous improvement of the development process.
 
@@ -308,7 +406,22 @@ Create and maintain \`/docs/qa_plan.md\` with:
 
 Remember: Your role is to ensure quality and validate that delivered software meets all requirements.
 `,
-    'governance.prompt.md': `# Governance Agent
+    'governance.agent.md': `---
+description: Ensure traceability, maintain process compliance, and provide lifecycle oversight
+name: Governance
+tools: ['fetch', 'search', 'codebase']
+handoffs:
+  - label: Research Compliance
+    agent: research
+    prompt: Research compliance requirements, audit trails, and governance best practices.
+    send: false
+  - label: Back to Vision
+    agent: vision
+    prompt: Review and refine the vision based on governance insights and process gaps.
+    send: false
+---
+
+# Governance Agent
 
 You are the **Governance Agent** in an Agentic SDLC system. Your role is to ensure traceability, maintain process compliance, and provide oversight across the development lifecycle.
 
@@ -339,7 +452,7 @@ Remember: Your role is to ensure the SDLC process is followed and all work is pr
 `
   };
 
-  return prompts[filename] || null;
+  return agents[filename] || null;
 }
 
 function getVisionTemplate(): string {

@@ -1,46 +1,54 @@
-export { installPrompts, createDocumentationStructure } from './installer';
+export { installAgents, createDocumentationStructure } from './installer';
 
 // Main API for programmatic usage
 export interface SDLCAgent {
   name: string;
   description: string;
-  promptFile: string;
+  agentFile: string;
+  handoffs: string[];
 }
 
 export const agents: SDLCAgent[] = [
   {
     name: 'Research',
-    description: 'Deep research, brainstorming, knowledge organization',
-    promptFile: 'research.prompt.md'
+    description: 'Conduct deep research, facilitate brainstorming, and organize knowledge',
+    agentFile: 'research.agent.md',
+    handoffs: ['vision', 'product', 'design']
   },
   {
     name: 'Vision',
-    description: 'Problem definition, user scenarios, success criteria',
-    promptFile: 'vision.prompt.md'
+    description: 'Define problem space, establish vision, and set project goals',
+    agentFile: 'vision.agent.md',
+    handoffs: ['research', 'product']
   },
   {
     name: 'Product',
-    description: 'Backlog management, epics, features, acceptance criteria',
-    promptFile: 'product.prompt.md'
+    description: 'Translate vision into product backlog with features and acceptance criteria',
+    agentFile: 'product.agent.md',
+    handoffs: ['research', 'design']
   },
   {
     name: 'Design',
-    description: 'Architecture, sequence flows, data models, trade-offs',
-    promptFile: 'design.prompt.md'
+    description: 'Create technical architecture, design solutions, and document trade-offs',
+    agentFile: 'design.agent.md',
+    handoffs: ['research', 'execution']
   },
   {
     name: 'Execution',
-    description: 'Implementation, coding, feature development',
-    promptFile: 'execution.prompt.md'
+    description: 'Implement features, write code, and deliver working software',
+    agentFile: 'execution.agent.md',
+    handoffs: ['research', 'qa']
   },
   {
     name: 'QA',
-    description: 'Test scenarios, quality assurance, regression testing',
-    promptFile: 'qa.prompt.md'
+    description: 'Validate requirements, design, and implementation through comprehensive testing',
+    agentFile: 'qa.agent.md',
+    handoffs: ['research', 'execution', 'governance']
   },
   {
     name: 'Governance',
-    description: 'Traceability, compliance, audit trails, process oversight',
-    promptFile: 'governance.prompt.md'
+    description: 'Ensure traceability, maintain process compliance, and provide lifecycle oversight',
+    agentFile: 'governance.agent.md',
+    handoffs: ['research', 'vision']
   }
 ];
